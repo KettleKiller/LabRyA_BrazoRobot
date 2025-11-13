@@ -1,16 +1,11 @@
-//Laboratorio Robótica y Animatrónica de la Universidad Nacional de Córdoba.
-//Director: Ing. Hugo Pailos
-//Autores: Bondaz Pablo Esteban y Torres José Ignacio.
-//Contenido: Código para mover un robot planar de 3GDL en base a coordenadas X,Y,Z. con adaptaciones para nuestro caso particular
-
 #include <Servo.h>
 
 // === Pines de servos ===
 const int pinBase  = 9;
 const int pinBrazo = 10;
 const int pinCodo  = 11;
-
-Servo servoBase, servoBrazo, servoCodo;
+const int pinGarra = 3;
+Servo servoBase, servoBrazo, servoCodo, servoGarra;
 
 // === Parámetros geométricos ===
 const float l1 = 18.8;
@@ -26,17 +21,21 @@ void setup() {
   servoBase.attach(pinBase);
   servoBrazo.attach(pinBrazo);
   servoCodo.attach(pinCodo);
-
-  // Leer posiciones iniciales
-  q1_actual = servoBase.read();
-  q2_actual = servoBrazo.read();
-  q3_actual = servoCodo.read();
-
-  servoBase.write(q1_actual);
-  servoBrazo.write(q2_actual);
-  servoCodo.write(q3_actual);
+  servoGarra.attach(pinGarra);
 
   Serial.println("Robot PUMA 3DOF listo.");
+}
+void Agarrar(bool agarrar){
+  if (agarrar){
+    for(int i=0;i<=90;i++){
+    servoGarra.write(i);
+    delay(20);
+  }}else{
+    for(int i=0;i<=90;i++){
+    servoGarra.write(90-i);
+    delay(20);
+  }
+  }
 }
 
 // === Función de cinemática inversa ===
@@ -77,9 +76,9 @@ void IK(float px, float py, float pz) {
 
 // === Movimiento de los servos (30 pasos fijos) ===
 void movermotor(float q1_target, float q2_target, float q3_target) {
-  // Convertir a ángulos de servo reales,debido a diferencias entre el modelo matemático y la disposición real de los servos.
+  // Convertir a ángulos de servo reales,debido 
   float s1_target = q1_target;
-  float s2_target = 90 + q2_target; 
+  float s2_target = 90 + q2_target;
   float s3_target = 180 - q3_target;
 
   // Posiciones actuales
@@ -110,15 +109,18 @@ void movermotor(float q1_target, float q2_target, float q3_target) {
 
 // ----------------------------------------------------------
 void loop() {
-  IK(20, 0, 10);
+  IK(25, 0, 15);
+  delay(500);
+  IK(25, 0, 6);
+  Agarrar(true);
+  IK(25, 0, 15);
   delay(1000);
-
-  IK(20, 10, 10);
+  
+  IK(-25, 0, 15);
+  delay(500);
+  IK(-25, 0, 6);
+  Agarrar(false);
+  IK(-25, 0, 15);
   delay(1000);
-
-  IK(20, 10, 20);
-  delay(1000);
-
-  IK(20, 0, 20);
-  delay(3000);
+  
 }
