@@ -1,3 +1,7 @@
+//Laboratorio Robótica y Animatrónica de la Universidad Nacional de Córdoba.
+//Autores: Bondaz Pablo Esteban y Torres José
+//Contenido: Código para mover un robot planar de 3GDL en base a coordenadas X,Y,Z. con adaptaciones para nuestro caso particular
+
 #include <Servo.h>
 
 // === Pines de servos ===
@@ -72,9 +76,9 @@ void IK(float px, float py, float pz) {
 
 // === Movimiento de los servos (30 pasos fijos) ===
 void movermotor(float q1_target, float q2_target, float q3_target) {
-  // Convertir a ángulos de servo reales,debido 
+  // Convertir a ángulos de servo reales,debido a diferencias entre el modelo matemático y la disposición real de los servos.
   float s1_target = q1_target;
-  float s2_target = 90 + q2_target;
+  float s2_target = 90 + q2_target; 
   float s3_target = 180 - q3_target;
 
   // Posiciones actuales
