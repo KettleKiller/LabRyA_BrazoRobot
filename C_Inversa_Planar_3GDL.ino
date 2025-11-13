@@ -1,3 +1,8 @@
+//Laboratorio Robótica y Animatrónica de la Universidad Nacional de Córdoba.
+//Director: Ing. Hugo Pailos
+//Autores: Bondaz Pablo Esteban y Torres José Ignacio.
+//Contenido: Código para mover un robot planar de 3GDL en base a coordenadas X,Y,Z. con adaptaciones para nuestro caso particular
+
 #include <Servo.h>
 
 // === Pines de servos ===
